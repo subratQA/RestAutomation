@@ -2,14 +2,17 @@
 using Newtonsoft.Json;
 using RestAPIAutomation.Modal;
 using RestAPIAutomation.Modal.JsonModal;
+using RestAPIAutomation.Model.XmlModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace RestAPIAutomation.GetEndPoint
 {
@@ -162,5 +165,37 @@ namespace RestAPIAutomation.GetEndPoint
             List<JsonRootObject> jsonRootObjects = JsonConvert.DeserializeObject<List<JsonRootObject>>(restResponse.ResponseContent);
             Console.WriteLine(jsonRootObjects[0].ToString());
         }   
+        [TestMethod]
+        public void TestDesirlizationOfXmlData()
+        {
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.RequestUri = new Uri(URL);
+            httpRequestMessage.Method = HttpMethod.Get;
+            httpRequestMessage.Headers.Add("Accept", "application/xml");
+
+            HttpClient httpClient = new HttpClient();
+            Task<HttpResponseMessage> httpResponse = httpClient.SendAsync(httpRequestMessage);
+            HttpResponseMessage httpResponseMessage = httpResponse.Result;
+            //Read Status Code
+            HttpStatusCode httpStatusCode = httpResponseMessage.StatusCode;
+            //Console.WriteLine("Status Code is=> " + httpStatusCode);
+            //Console.WriteLine("Status Code is=> " + (int)httpStatusCode);
+
+            //Read Content
+            HttpContent httpContent = httpResponseMessage.Content;
+            //Console.WriteLine("Total Content=> " + httpContent);
+            Task<string> responseData = httpContent.ReadAsStringAsync();
+            string data = responseData.Result;
+            //Console.WriteLine("Total data=> " + data);
+
+            RestResponse restResponse = new RestResponse((int)httpStatusCode, responseData.Result);
+            //List<JsonRootObject> jsonRootObjects = JsonConvert.DeserializeObject<List<JsonRootObject>>(restResponse.ResponseContent);
+            //Console.WriteLine(jsonRootObjects[0].ToString());
+
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(LaptopDetails));
+            TextReader textReader = new StringReader(restResponse.ResponseContent);
+            LaptopDetails xmlData = (LaptopDetails)xmlSerializer.Deserialize(textReader);
+            Console.WriteLine(xmlData.ToString());
+         }
     }
 }

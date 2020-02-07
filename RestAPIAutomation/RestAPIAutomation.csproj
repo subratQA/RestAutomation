@@ -108,6 +108,7 @@
     <Compile Include="Model\RestResponse.cs" />
     <Compile Include="Model\XmlModel\Features.cs" />
     <Compile Include="Model\XmlModel\Laptop.cs" />
+    <Compile Include="Model\XmlModel\LaptopDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
