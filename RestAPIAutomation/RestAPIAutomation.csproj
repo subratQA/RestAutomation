@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GetEndPoint\TestEndpoint.cs" />
+    <Compile Include="Helpers\Request\HttpClientHelper.cs" />
     <Compile Include="Model\JsonModel\Features.cs" />
     <Compile Include="Model\JsonModel\JsonRootObject.cs" />
     <Compile Include="Model\RestResponse.cs" />
